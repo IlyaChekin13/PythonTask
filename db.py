@@ -1,6 +1,8 @@
 import psycopg2 as pg
 from getInfo import data
-from config import user, db_name, password
+db_name='taskdb'
+user='ilyac'
+password= '132731'
 
 try:
     conn = pg.connect(
@@ -8,18 +10,10 @@ try:
         user=user,
         password=password)
 except (Exception, pg.DatabaseError) as error:
-    print(error)
+    print("Error while connecting database", error)
 
 cursor = conn.cursor()
-cursor.execute(
-    """CREATE TABLE orders(
-        id serial PRIMARY KEY,
-        order_id INT,
-        price_dollars,
-        
-    )
 
-""")
 
 tmp_df = "tmp_dataframe.csv"
 data.to_csv(tmp_df, index_label='id', header=False)
