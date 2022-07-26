@@ -32,7 +32,7 @@ def getData():
     dates = tuple(data[3])
     data[3][0] = 'стоимость руб'
     for i in range(1, len(data[2])):
-        data[3][i] = float(data[2][i]) * getRate()
+        data[3][i] = float(data[2][i]) * getRate() 
     data.append(list(dates))
 
     return data
