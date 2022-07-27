@@ -1,5 +1,7 @@
-
+from test_class import Task
 def main():
-    pass
+    a = Task()
     
 
+if __name__ == '__main__':
+    main()
