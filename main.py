@@ -1,7 +1,9 @@
-from test_class import Task
+from taskClass import Task
+
+
 def main():
-    a = Task()
-    
+    Task_obj = Task()
+         
 
 if __name__ == '__main__':
-    main()
+    main()  

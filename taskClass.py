@@ -6,51 +6,38 @@ from oauth2client.service_account import ServiceAccountCredentials
 import keyboard
 import os
 import time 
+from database import Database
 
 
 class Task:
     def __init__(self):
         
-        # Авторизация (можно отдельную функцию) (если нет сохраненной сессии, то попросить логин и пароль)
-        # Подлкючение к БД и проверка таблицы (если нет - создать)
-        # Выгрузка данных (или снача удалить все из таблицы, а потом выгрузить или выгрузить и сравнить с содержимым таблицы)
+        self.db = Database()
         self.process()
 
     def process(self):
         """Main process of the app"""
-        # Бесконечный цикл (обработать выход из него на нажатие кнопки)
-            # Ожидание триггера на изменение
-            # Проверка курса доллара
+        
         creds = False
         while True:
             if keyboard.is_pressed('esc'):
                 break
             if not creds:
                 ExchangeRate = self.getRate()
-                creds = self._get_credential_file()
+                creds = "PythonTask/creds.json"
                 data = self.getData(creds, ExchangeRate)
+                self.db.update_table(data)
                 
             
-            time.sleep(15)
+            time.sleep(3)
             ExchangeRate = self.getRate()
             newdata = self.getData(creds, ExchangeRate)
             #checking updates
             if data != newdata:
                 if len(data) >= len(newdata):
-                    #number of deleted rows
-                    deletedRows = len(data) - len(newdata)
-                    for i in range(len(data)):
-                        if data[i] != newdata[i]:
-                            print("{} to {}".format(data[i], newdata[i]))
-                            #i row was changed
-                            pass
+                    self.db.update_with_delete(newdata)
                 else:
-                    #data of new rows
-                    newrows = newdata[len(data):]
-                    for i in range(len(newdata)):
-                        if data[i] != newdata[i]:
-                            #i row was changed
-                            pass
+                    self.db.update_table(newdata)
             
             data = newdata
 
@@ -101,17 +88,4 @@ class Task:
 
         return data
 
-    def _get_credential_file(self) -> str:
-        """Gets the json file with credentials"""
 
-        CREDENTIALS_FILE = input('Write path to your credentials json file:\n')
-        if os.path.isfile(CREDENTIALS_FILE):
-            return(str(CREDENTIALS_FILE))
-        else:
-            print("Wrong path! \nTry again.")
-            self._get_credential_file()
-
-
-
-a = Task()
-a.process()
